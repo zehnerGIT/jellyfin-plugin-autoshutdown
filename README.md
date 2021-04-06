@@ -1,0 +1,2 @@
+# jellyfin-plugin-autoshutdown
+Desc
