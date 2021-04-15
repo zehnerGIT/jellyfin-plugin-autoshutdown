@@ -1,0 +1,15 @@
+---
+name: "Auto ShutDown"
+guid: "746785d5-20d7-4840-ad59-947f9844ad87"
+version: "0.1.0.0"
+targetAbi: "10.7.0.0"
+framework: "net5.0"
+owner: "jellyfin"
+overview: "Shutdown after idle period"
+description: >
+  Shutdown after idle period
+category: "General"
+artifacts:
+- "Jellyfin.Plugin.AutoShutDown.dll"
+changelog: >
+  Initial version

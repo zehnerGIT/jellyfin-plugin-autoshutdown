@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Jellyfin AutoShutDown Plugin</title>
+</head>
+
+<body>
+    <div id="autoShutDownConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage"
+        data-require="emby-input,emby-button,emby-select,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="autoShutDownConfigurationForm">
+                    <div class="sectionTitleContainer flex align-items-center">
+                        <h2 class="sectionTitle">AutoShutDown</h2>
+                    </div>
+                    <div class="verticalSection">
+                        <p>This plugin shuts down your OS (not only Jellyfin) after a certain time of inactivity.</p>
+                        <br />
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="intervalInMin">Interval (in min)</label>
+                        <input is="emby-input" type="number" id="intervalInMin" name="intervalInMin" min="1" />
+                        <div class="fieldDescription">
+                            Timespan (in min) btw. checks. Only integers > 0 are allowed.
+                            <br /> 
+                            Select a value according to the defined checks (more checks need more time to finish)
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="initialDelayInMin">Initial delay (in min)</label>
+                        <input is="emby-input" type="number" id="initialDelayInMin" name="initialDelayInMin" />
+                        <div class="fieldDescription">
+                            Wait this timespan (in min) after booting, before the first check interval is executed.
+                            <br />
+                            Only necessary, if your system needs to finish some tasks after boot (e.g. server backups or library updates). Leave empty or set to 0 if not needed.
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="executions">Executions</label>
+                        <input is="emby-input" type="number" id="executions" name="executions" min="1" />
+                        <div class="fieldDescription">
+                            Shut down the system after this amount of intervals and exit condition not met.
+                            <br /> 
+                            Every time the exit condition is met, the counter resets to 0.
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="localPorts">Ports</label>
+                        <input is="emby-input" type="text" id="localPorts" name="localPorts" />
+                        <div class="fieldDescription">
+                            List of local ports with an open remote connection.
+                            <br /> 
+                            Only integers > 0 are allowed. Only connections from another host (IPs != Jellyfin-IP) are relevant. Separate multiple ports with a single space. Some possible ports:
+                            22      SSH
+                            445     Samba
+                            8096    Jellyfin 
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="remoteHosts">Hosts</label>
+                        <input is="emby-input" type="text" id="remoteHosts" name="remoteHosts" />
+                        <div class="fieldDescription">
+                            List of remote hosts to ping.
+                            <br /> 
+                            IPs or URLs are allowed. Separate multiple hosts with a single space. Be careful with android devices: most of them can be pinged, even in standby.
+                        </div>
+                    </div>                    
+
+                    <button is="emby-button" type="submit"
+                        class="raised button-submit block emby-button"><span>Save</span></button>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var autoShutDownConfigurationPage = {
+                pluginUniqueId: "746785d5-20d7-4840-ad59-947f9844ad87"
+            };
+
+            $('#autoShutDownConfigurationPage').on('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(autoShutDownConfigurationPage.pluginUniqueId).then(function (config) {
+                    $('#intervalInMin').val(config.IntervalInMin).change();
+                    $('#initialDelayInMin').val(config.InitialDelayInMin).change();
+                    $('#executions').val(config.Executions).change();
+                    $('#localPorts').val(config.LocalPorts).change();
+                    $('#remoteHosts').val(config.RemoteHosts).change();
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+            $('#autoShutDownConfigurationForm').on('submit', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(autoShutDownConfigurationPage.pluginUniqueId).then(function (config) {
+                    config.IntervalInMin = $('#intervalInMin').val();
+                    config.InitialDelayInMin = $('#initialDelayInMin').val();
+                    config.Executions = $('#executions').val();
+                    config.LocalPorts = $('#localPorts').val();
+                    config.RemoteHosts = $('#remoteHosts').val();
+                    ApiClient.updatePluginConfiguration(autoShutDownConfigurationPage.pluginUniqueId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    });
+                });
+                return false;
+            });
+        </script>
+    </div>
+</body>
+
+</html>
