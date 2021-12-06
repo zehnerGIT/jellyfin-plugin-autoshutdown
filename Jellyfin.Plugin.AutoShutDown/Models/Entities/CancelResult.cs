@@ -1,6 +1,6 @@
 namespace Jellyfin.Plugin.AutoShutDown.Models.Entities
 {
-    public struct CancelResult
+    public record CancelResult
     {
         public string Message { get; init; }
 

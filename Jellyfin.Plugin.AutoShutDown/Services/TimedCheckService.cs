@@ -8,30 +8,36 @@ using Jellyfin.Plugin.AutoShutDown.Configuration;
 using Jellyfin.Plugin.AutoShutDown.Models.Entities;
 using Jellyfin.Plugin.AutoShutDown.Services.Helpers;
 using Jellyfin.Plugin.AutoShutDown.Services.Helpers.ShutDown;
+using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Plugins;
+using MediaBrowser.Controller.Session;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AutoShutDown.Services
 {
     public sealed class TimedCheckService : IServerEntryPoint
     {
-        private static Lazy<BaseShutDown> _lazyShutDown = null;
+        private static Lazy<BaseShutDown> _lazyShutDown;
         private static int _initialDelayInMin = PluginConfiguration.DefaultInitialDelay;
         private static int _intervalInMin = PluginConfiguration.DefaultInterval;
-        private readonly CancellationTokenSource _stoppingCts = new CancellationTokenSource();
+        private readonly CancellationTokenSource _stoppingCts = new ();
         private readonly PingManager _pingManager;
         private readonly PortManager _portManager;
+        private readonly JellyfinLibraryManager _jellyfinLibraryManager;
+        private readonly JellyfinSessionManager _jellyfinSessionManager;
         private readonly ILogger _logger;
         private Timer _timer;
         private int _executionCount = 0;
 
-        public TimedCheckService(ILogger<TimedCheckService> logger)
+        public TimedCheckService(ISessionManager sessionManager, ILibraryManager libraryManager, ILogger<TimedCheckService> logger)
         {
             _logger = logger;
             _initialDelayInMin = AutoShutDownPlugin.Instance.Configuration.InitialDelayInMin;
             _intervalInMin = AutoShutDownPlugin.Instance.Configuration.IntervalInMin;
             _pingManager = new PingManager(logger);
             _portManager = new PortManager(logger);
+            _jellyfinLibraryManager = new JellyfinLibraryManager(libraryManager, logger);
+            _jellyfinSessionManager = new JellyfinSessionManager(sessionManager, logger);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -99,6 +105,9 @@ namespace Jellyfin.Plugin.AutoShutDown.Services
                 {
                     cancelResults.Add(_pingManager.CancelShutDown(pingHost));
                 }
+
+                cancelResults.Add(_jellyfinLibraryManager.CancelShutDown(null));
+                cancelResults.Add(_jellyfinSessionManager.CancelShutDown(null));
 
                 var cancelTask = await Helpers.TaskExtensions.WhenFirst(cancelResults, t => t.Status == TaskStatus.RanToCompletion && t.Result.Cancel);
                 if (cancelTask != null)

@@ -10,6 +10,9 @@ namespace Jellyfin.Plugin.AutoShutDown.Configuration
         public const int DefaultInterval = 5;
         public const int DefaultInitialDelay = 15;
         public const int DefaultExecutions = 3;
+        private string _localPorts;
+        private string _remoteHosts;
+
 
         public PluginConfiguration()
         {
@@ -23,8 +26,6 @@ namespace Jellyfin.Plugin.AutoShutDown.Configuration
         public int InitialDelayInMin { get; set; }
 
         public int Executions { get; set; }
-
-        private string _localPorts;
 
         public string LocalPorts
         {
@@ -57,8 +58,6 @@ namespace Jellyfin.Plugin.AutoShutDown.Configuration
 
         [XmlIgnore]
         public List<string> CheckPorts { get; } = new List<string>();
-
-        private string _remoteHosts;
 
         public string RemoteHosts
         {
