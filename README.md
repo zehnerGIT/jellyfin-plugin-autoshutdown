@@ -44,9 +44,6 @@ Only integers > 0 are allowed. Only connections from another host (IPs != Jellyf
 List of remote hosts to ping.
 IPs or URLs are allowed. Separate multiple hosts with a single space. Be careful with android devices: most of them can be pinged, even in standby.
 
-## ToDos
-- Cancel shutdown on library updates
-
 ## Build Process
 
 1. Clone or download this repository
