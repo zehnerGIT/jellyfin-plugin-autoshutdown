@@ -25,8 +25,12 @@ namespace Jellyfin.Plugin.AutoShutDown.Services.Helpers
 
             try
             {
-                var result = await new Ping().SendPingAsync(remoteHost, TimeOutInMsec);
-                cancel = result != null && result.Status == IPStatus.Success;
+                PingReply result;
+                using (var ping = new Ping())
+                {
+                    result = await ping.SendPingAsync(remoteHost, TimeOutInMsec);
+                    cancel = result != null && result.Status == IPStatus.Success;
+                }
             }
             catch (Exception ex)
             {
