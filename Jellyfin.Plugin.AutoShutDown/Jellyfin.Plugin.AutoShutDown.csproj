@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Jellyfin.Plugin.AutoShutDown</RootNamespace>
-    <AssemblyVersion>10.7.0.0</AssemblyVersion>
-    <FileVersion>10.7.0.0</FileVersion>
+    <AssemblyVersion>10.8.0.0</AssemblyVersion>
+    <FileVersion>10.8.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="Jellyfin.Model" Version="10.7.*-*" />
-    <PackageReference Include="Jellyfin.Controller" Version="10.7.*-*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Jellyfin.Model" Version="10.8.*-*" />
+    <PackageReference Include="Jellyfin.Controller" Version="10.8.*-*" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Configuration\configPage.html" />
@@ -17,7 +17,7 @@
 
   <!-- Code Analyzers-->
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" PrivateAssets="All" />
     <PackageReference Include="SerilogAnalyzer" Version="0.15.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
     <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" PrivateAssets="All" />
