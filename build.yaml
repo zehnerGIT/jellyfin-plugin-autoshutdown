@@ -1,9 +1,9 @@
 ---
 name: "Auto ShutDown"
 guid: "746785d5-20d7-4840-ad59-947f9844ad87"
-version: "1.0.0.0"
-targetAbi: "10.7.0.0"
-framework: "net5.0"
+version: "10.8.0.0"
+targetAbi: "10.8.0.0"
+framework: "net6.0"
 owner: "jellyfin"
 overview: "Shutdown after idle period"
 description: >
